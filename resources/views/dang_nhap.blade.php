@@ -28,7 +28,7 @@
                 <img width="35%" src="/img/logo_lcnb.png" alt="" srcset="">
             </div>
             <div class="w-50" style="margin: 0 auto;">
-                <form action="" method="post">
+                <form action="{{route('xu_lu_dang_nhap')}}" method="post">
                     @csrf
                     <div class="mb-3">
                         <label for="exampleInputEmail1" class="form-label">Tên đăng nhập</label>

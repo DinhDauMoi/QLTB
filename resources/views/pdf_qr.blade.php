@@ -52,11 +52,11 @@
     QrCode::format('svg')
         ->size(100)
         ->encoding('UTF-8')
-        ->generate($get_data_qr->id . '-' . $get_data_qr->kho->ten_kho . '-' . $get_data_qr->imei)
+        ->generate('Máy '.$get_data_qr->id . '-' . 'TSCT' . '-' . $get_data_qr->imei)
 ) }}">
                 </div>
                 <div class="info" style="line-height: 1.1; font-size: 14px; margin: 0;">
-                    <p style="margin: 2px 0;">Máy {{ $get_data_qr->id }} - {{ $get_data_qr->kho->ten_kho }}</p>
+                    <p style="margin: 2px 0;">Máy {{$get_data_qr->id . '-' . 'TSCT'}}</p>
                     <p style="margin: 2px 0;">{{ $get_data_qr->imei }}</p>
                 </div>
             </td>

@@ -67,14 +67,14 @@
                         QrCode::format('svg')
                             ->size(100)
                             ->encoding('UTF-8')
-                            ->generate($item->id . '-' . $item->kho->ten_kho . '-' . $item->imei)
+                            ->generate('Máy '.$item->id . '-' . 'TSCT' . '-' . $item->imei)
                     ) }}" style="width: 100px; height: 100px;">
                     {{-- Thêm style cho img để kiểm soát kích thước tuyệt đối (tốt cho PDF) --}}
                 </div>
 
                 <div class="info" style="line-height: 1.1; font-size: 10px; margin: 0;">
                     {{-- Giảm font-size xuống 10px hoặc thấp hơn (phù hợp cho in ấn nhỏ) --}}
-                    <p style="margin: 2px 0;">Máy {{ $item->id }} - {{ $item->kho->ten_kho }}</p>
+                    <p style="margin: 2px 0;">Máy {{$item->id . '-' . 'TSCT'}}</p>
                     <p style="margin: 2px 0;">{{ $item->imei }}</p>
                 </div>
 

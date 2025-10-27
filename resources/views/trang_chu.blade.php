@@ -21,6 +21,24 @@
             background-size: 55px 55px;
         }
 
+        #reader {
+            width: 400px;
+        }
+
+        .result {
+            background-color: green;
+            color: #fff;
+            padding: 20px;
+        }
+
+        /* .row_d {
+            display: flex;
+        } */
+
+        #reader__scan_region {
+            background: white;
+        }
+
         .file-upload {
             display: inline-block;
             position: relative;
@@ -59,14 +77,31 @@
                 <h4 class="m-3">QUẢN LÝ MÁY IN NHIỆT</h4>
             </div>
 
-            <div class="d-flex flex-nowrap justify-content-end align-items-center gap-2 flex-grow-1">
-                <input type="text" class="form-control text-center fw-bold border border-black"
-                    value="ĐANG QUẢN LÝ {{$so_luong}} THIẾT BỊ"
-                    readonly style="max-width: 280px;">
-                <a href="{{ route('export') }}" class="btn btn-primary">Xuất Dữ liệu</a>
-                <a href="{{route('in_all_qr')}}" class="btn btn-primary">In Tất Cả QR</a>
-                <button class="btn btn-outlight"><i style="font-size: 2em;" class="fa-solid fa-right-from-bracket"></i></button>
+            <div class="container-responsive d-flex justify-content-start align-items-center gap-2 w-100" style="flex-wrap: wrap !important;">
+
+                <div class="d-flex align-items-center justify-content-between gap-2 flex-grow-1" style="min-width: 300px;">
+
+                    <input type="text"
+                        class="form-control text-center fw-bold border border-black flex-grow-1"
+                        value="ĐANG QUẢN LÝ {{ $so_luong }} THIẾT BỊ"
+                        readonly
+                        style="max-width: 280px; min-width: 200px;">
+
+                    <a href="{{ route('dang_xuat') }}" class="btn btn-outline-dark" style="flex: 0 0 auto;">
+                        <i class="fa-solid fa-right-from-bracket" style="font-size: 1.8em;"></i>
+                    </a>
+                </div>
+
+                <div class="d-flex align-items-center gap-2 ms-auto flex-grow-0 w-100 w-md-auto">
+
+                    <a href="{{ route('export') }}" class="btn btn-primary w-100 w-sm-auto">Xuất Dữ liệu</a>
+
+                    <a href="{{ route('in_all_qr') }}" class="btn btn-primary w-100 w-sm-auto">In Tất Cả QR</a>
+                </div>
             </div>
+
+
+
         </div>
 
         <!-- ======== MAIN CONTENT ======== -->
@@ -124,7 +159,7 @@
             <div class="col-lg-8">
                 <div class="p-3 border border-black rounded h-100">
                     <!-- Thanh tìm kiếm -->
-                    <div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
+                    <div class="d-flex align-items-center justify-content-between gap-2 flex-grow-1 mb-3" style="min-width: 300px;">
                         <div class="input-group" style="max-width: 90%;">
                             <input id="searchInput" type="text" class="form-control border border-black" placeholder="Tìm kiếm">
                         </div>
@@ -133,21 +168,19 @@
                         </button>
 
                         <div class="modal fade" id="qrScannerModal" tabindex="-1" aria-labelledby="qrScannerModalLabel" aria-hidden="true">
-                            <div class="modal-dialog">
+                            <div class="modal-dialog modal-dialog-centered d-flex justify-content-center">
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <h5 class="modal-title" id="qrScannerModalLabel">Quét Mã QR</h5>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body text-center">
-                                        {{-- Vùng hiển thị luồng camera --}}
-                                        <video id="qrScannerVideo" style="width: 100%; max-height: 300px;"></video>
-
-                                        {{-- Vùng hiển thị kết quả (tùy chọn) --}}
-                                        <p id="scanResult" class="mt-3 text-success" style="display: none;"></p>
-
-                                        {{-- Lỗi (nếu camera không khả dụng) --}}
-                                        <p id="scanError" class="mt-3 text-danger"></p>
+                                        <div class="d-flex justify-content-center align-items-center gap-4 flex-wrap">
+                                            <div id="reader"></div>
+                                            <div style="padding: 30px; text-align: center;">
+                                                <div id="result"></div>
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
@@ -155,6 +188,7 @@
                                 </div>
                             </div>
                         </div>
+
                     </div>
 
                     <!-- Bảng thiết bị -->
@@ -177,8 +211,14 @@
                                     <td>{{$item->imei}}</td>
                                     <td>{{ $item->created_at->format('d-m-Y') }}</td>
                                     <td>
-                                        <a href="{{route('chi_tiet',['id'=>$item->id])}}" class="btn btn-sm btn-primary me-1">Chi Tiết</a>
-                                        <button onclick="confirmDelete('{{$item->id}}')" class="btn btn-sm btn-danger">Xóa</button>
+                                        <div class="d-flex flex-wrap gap-1">
+                                            <a href="{{ route('chi_tiet', ['id' => $item->id]) }}" class="btn btn-sm btn-primary">
+                                                Chi Tiết
+                                            </a>
+                                            <button onclick="confirmDelete('{{ $item->id }}')" class="btn btn-sm btn-danger">
+                                                Xóa
+                                            </button>
+                                        </div>
                                     </td>
                                 </tr>
                                 @endforeach
@@ -190,6 +230,7 @@
         </div>
     </div>
 </body>
+
 <script>
     document.getElementById('fileInput').addEventListener('change', function(event) {
         const fileNameDiv = document.getElementById('fileName');
@@ -201,108 +242,5 @@
         }
     });
 </script>
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // ... (Các khai báo const giữ nguyên) ...
-        const modalElement = document.getElementById('qrScannerModal');
-        const errorElement = document.getElementById('scanError');
-        let html5QrCode = null;
 
-        // --- Hàm xử lý khi quét thành công (Giữ nguyên) ---
-        const onScanSuccess = (decodedText, decodedResult) => {
-            // ... (Logic cắt chuỗi và chuyển hướng giữ nguyên) ...
-            if (html5QrCode) {
-                html5QrCode.stop().then(() => {
-                    console.log("Quét thành công: " + decodedText);
-                    const parts = decodedText.split('-');
-                    if (parts.length >= 3) {
-                        const idCanLay = parts[0];
-                        document.getElementById('scanResult').textContent = `Đã quét ID: ${idCanLay}. Đang chuyển hướng...`;
-                        document.getElementById('scanResult').style.display = 'block';
-
-                        const detailRouteBase = "{{ route('chi_tiet', ['id' => ':id']) }}";
-                        const redirectUrl = detailRouteBase.replace(':id', idCanLay);
-                        window.location.href = redirectUrl;
-                    } else {
-                        document.getElementById('scanError').textContent = 'Mã QR không hợp lệ (Không đúng định dạng).';
-                        document.getElementById('scanError').style.display = 'block';
-                    }
-                }).catch(err => {
-                    console.error("Lỗi khi dừng camera:", err);
-                });
-            }
-        };
-
-        // --- Khởi tạo Scanner khi Modal được mở (Phần sửa lỗi) ---
-        modalElement.addEventListener('shown.bs.modal', () => {
-            if (!html5QrCode) {
-                // Khởi tạo lại Html5Qrcode nếu chưa có (rất quan trọng)
-                html5QrCode = new Html5Qrcode("qrScannerVideo");
-            }
-
-            // Cấu hình quét
-            const config = {
-                fps: 10,
-                qrbox: {
-                    width: 250,
-                    height: 250
-                }
-            };
-
-            // --- Cấu hình CAMERA MỚI (Linh hoạt hơn) ---
-            const cameraConfig = {
-                facingMode: "environment"
-            }; // Bỏ 'exact'
-
-            html5QrCode.start(
-                cameraConfig,
-                config,
-                onScanSuccess,
-                (errorMessage) => {
-                    // Xử lý lỗi trong quá trình quét (thường là lỗi nhỏ)
-                }
-            ).catch((err) => {
-                // Lỗi LỚN: Khởi tạo camera thất bại
-                console.error("Lỗi khởi tạo camera chi tiết:", err);
-
-                let errorMsg = 'Lỗi truy cập camera.';
-
-                // Kiểm tra các lỗi phổ biến
-                if (err.name === 'NotAllowedError') {
-                    errorMsg = 'Truy cập bị từ chối. Vui lòng cho phép camera trong cài đặt trình duyệt.';
-                } else if (err.name === 'NotFoundError') {
-                    errorMsg = 'Không tìm thấy camera sau. Đang thử camera trước.';
-
-                    // Thử lại với camera trước
-                    html5QrCode.start({
-                        facingMode: "user"
-                    }, config, onScanSuccess, (e) => {}).catch((e2) => {
-                        errorElement.textContent = 'Không tìm thấy thiết bị camera nào.';
-                    });
-                    return; // Thoát khỏi hàm để không hiển thị lỗi ban đầu
-                } else if (err.name === 'SecurityError') {
-                    errorMsg = 'Bảo mật: Chức năng camera chỉ hoạt động trên HTTPS hoặc localhost.';
-                } else if (err.name === 'OverconstrainedError') {
-                    errorMsg = 'Lỗi cấu hình camera (Thử lại trên thiết bị khác).';
-                }
-
-                errorElement.textContent = errorMsg;
-                // Hiển thị alert chung, nhưng lỗi chi tiết đã có trong Console
-                alert(errorMsg);
-            });
-        });
-
-        // --- Dừng Scanner khi Modal được đóng (Giữ nguyên) ---
-        modalElement.addEventListener('hidden.bs.modal', () => {
-            if (html5QrCode && html5QrCode.isScanning) {
-                html5QrCode.stop().catch(err => {
-                    console.error("Lỗi khi dừng camera:", err);
-                });
-            }
-            // Xóa thông báo lỗi và kết quả
-            document.getElementById('scanResult').style.display = 'none';
-            errorElement.textContent = '';
-        });
-    });
-</script>
 </html>

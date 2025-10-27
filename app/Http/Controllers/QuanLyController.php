@@ -10,6 +10,7 @@ use App\Models\ThietBi;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Facades\Excel;
 
 class QuanLyController extends Controller
@@ -31,6 +32,23 @@ class QuanLyController extends Controller
     }
     public function Dang_Nhap()
     {
+        return view('dang_nhap');
+    }
+    public function Xu_Ly_Dang_Nhap(Request $request){
+        $username = $request->input('ten_dang_nhap');
+        $password = $request->input('mat_khau');
+
+        $validUser = config('login.user');
+        $hashedPassword = config('login.password');
+
+        if ($username == $validUser && $password == $hashedPassword) {
+            session(['user' => $username]);
+            return redirect('/');
+        }
+        return back()->with('error', 'Đăng nhập thất bại !!!');
+    }
+    public function Dang_xuat(){
+        session()->forget('user');
         return view('dang_nhap');
     }
     public function Them_Thiet_Bi(Request $request)
@@ -135,14 +153,13 @@ class QuanLyController extends Controller
     }
     public function import(Request $request)
     {
-        // dd($request->file('file'));
-        // Validate file
         $request->validate([
             'file' => 'required|mimes:xlsx,xls',
         ]);
-        $path = $request->file('file')->getRealPath();
-        Excel::import(new ThietBiImport, $path);
-        return back()->with('success', "");;
+
+        Excel::import(new ThietBiImport, $request->file('file')); // ✅
+
+        return back()->with('success', 'Import thành công!');
     }
     public function exportExcel()
     {

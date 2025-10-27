@@ -8,6 +8,7 @@
 <!-- Bao gồm jQuery -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://unpkg.com/html5-qrcode"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.2.0/html5-qrcode.min.js"></script>
 @if (Session::has('error'))
 <script>
     setTimeout(function() {
@@ -82,4 +83,34 @@
             });
         });
     });
+</script>
+<script>
+    function onScanSuccess(qrCodeMessage) {
+        // Hiển thị kết quả lên giao diện
+        document.getElementById("result").innerHTML =
+            '<span class="result">' + qrCodeMessage + "</span>";
+
+        // Dò ID máy trong chuỗi, ví dụ "Máy 13-TSCT-Y25061700257"
+        const match = qrCodeMessage.match(/Máy\s*(\d+)/i);
+        if (match && match[1]) {
+            const id = match[1]; // lấy số id (vd: 13)
+            // Route đến trang chi tiết thiết bị
+            window.location.href = '/chi_tiet_thiet_bi/' + id;
+        } else {
+            alert("Không tìm thấy ID trong mã QR!");
+        }
+    }
+    // 13-TSCT-Y25061700257
+    // When scan is unsuccessful fucntion will produce error message
+    function onScanError(errorMessage) {
+        // Handle Scan Error
+    }
+    // Setting up Qr Scanner properties
+    var html5QrCodeScanner = new Html5QrcodeScanner("reader", {
+        fps: 10,
+        qrbox: 250
+    });
+
+    // in
+    html5QrCodeScanner.render(onScanSuccess, onScanError);
 </script>
