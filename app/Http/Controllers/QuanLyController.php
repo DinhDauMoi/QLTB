@@ -168,4 +168,9 @@ class QuanLyController extends Controller
 
         return Excel::download(new ThietBiExport, $fileName);
     }
+    public function kiemTra($id)
+    {
+        $exists = ThietBi::where('id', $id)->exists();
+        return response()->json(['exists' => $exists]);
+    }
 }

@@ -90,16 +90,34 @@
         document.getElementById("result").innerHTML =
             '<span class="result">' + qrCodeMessage + "</span>";
 
-        // Dò ID máy trong chuỗi, ví dụ "Máy 13-TSCT-Y25061700257"
-        const match = qrCodeMessage.match(/Máy\s*(\d+)/i);
+        // Regex chỉ bắt khi có định dạng "Máy [id]-TSCT-..."
+        const match = qrCodeMessage.match(/Máy\s*(\d+)-TSCT-/i);
+
         if (match && match[1]) {
             const id = match[1]; // lấy số id (vd: 13)
-            // Route đến trang chi tiết thiết bị
-            window.location.href = '/chi_tiet_thiet_bi/' + id;
+
+            // Gửi request đến Laravel để kiểm tra ID có tồn tại không
+            fetch(`/kiem_tra_thiet_bi/${id}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.exists) {
+                        // Nếu tồn tại, chuyển đến trang chi tiết
+                        window.location.href = '/chi_tiet_thiet_bi/' + id;
+                    } else {
+                        alert("Thiết bị không tồn tại trong hệ thống!");
+                        document.getElementById("result").innerHTML = "Mã không hợp lệ";
+                    }
+                })
+                .catch(error => {
+                    console.error("Lỗi kiểm tra thiết bị:", error);
+                    alert("Không thể kiểm tra thiết bị. Vui lòng thử lại!");
+                });
         } else {
-            alert("Không tìm thấy ID trong mã QR!");
+            alert("Không tìm thấy ID hợp lệ trong mã QR!");
+            document.getElementById("result").innerHTML = "Mã không hợp lệ";
         }
     }
+
     // 13-TSCT-Y25061700257
     // When scan is unsuccessful fucntion will produce error message
     function onScanError(errorMessage) {

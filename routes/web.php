@@ -32,4 +32,6 @@ Route::get('/generate-pdf/{id}', [QuanLyController::class, 'generatePDF'])->name
 Route::get('/tai_all_qr', [QuanLyController::class, 'In_All_QR'])->name('in_all_qr')->middleware('checkLogin');
 Route::post('/import', [QuanLyController::class, 'import'])->name('import')->middleware('checkLogin');
 Route::get('/export', [QuanLyController::class, 'exportExcel'])->name('export')->middleware('checkLogin');
+Route::get('/kiem_tra_thiet_bi/{id}', [QuanLyController::class, 'kiemTra'])->middleware('checkLogin');
+
 //if0_40257662 p4qWTBvopGU5w
