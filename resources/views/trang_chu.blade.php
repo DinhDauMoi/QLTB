@@ -8,7 +8,7 @@
     <title>Trang chủ</title>
 </head>
 
-<body>
+<body class="d-flex flex-column min-vh-100">
     <style>
         /* From Uiverse.io by kennyotsu-monochromia */
         body {
@@ -94,10 +94,33 @@
 
                 <div class="d-flex align-items-center gap-2 ms-auto flex-grow-0 w-100 w-md-auto">
 
-                    <a href="{{ route('export') }}" class="btn btn-primary w-100 w-sm-auto">Xuất Dữ liệu</a>
-
-                    <a href="{{ route('in_all_qr') }}" class="btn btn-primary w-100 w-sm-auto">In Tất Cả QR</a>
+                    <a href="{{ route('export') }}" class="btn btn-primary w-100 w-sm-auto border border-black">Xuất Dữ liệu</a>
+                    <a href="{{ route('in_all_qr') }}" class="btn btn-primary w-100 w-sm-auto border border-black">In Tất Cả QR</a>
                 </div>
+                <form action="{{route('in_qr_theo_id')}}" method="get" class="d-flex align-items-center gap-2 w-100 ">
+                    <div class="flex-fill">
+                        <select name="start_id" class="form-select border border-black">
+                            <option selected>Chọn máy bắt đầu</option>
+                            @foreach ($thiet_bi as $tb)
+                            <option value="{{ $tb->id }}">Máy {{ $tb->id }} - {{ $tb->imei }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="flex-fill">
+                        <select name="end_id" class="form-select border border-black">
+                            <option selected>Chọn máy kết thúc</option>
+                            @foreach ($thiet_bi as $tb)
+                            <option value="{{ $tb->id }}">Máy {{ $tb->id }} - {{ $tb->imei }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="flex-fill">
+                        <button class="btn btn-primary w-100 border border-black">In QR</button>
+                    </div>
+                </form>
+
+
+
             </div>
 
 
@@ -210,8 +233,8 @@
                                     <td>{{$item->kho->ten_kho}}</td>
                                     <td>{{$item->imei}}</td>
                                     <td>{{ $item->created_at->format('d-m-Y') }}</td>
-                                    <td>
-                                        <div class="d-flex flex-wrap gap-1">
+                                    <td class="text-center">
+                                        <div class="d-flex justify-content-center flex-wrap gap-1">
                                             <a href="{{ route('chi_tiet', ['id' => $item->id]) }}" class="btn btn-sm btn-primary">
                                                 Chi Tiết
                                             </a>
@@ -230,6 +253,9 @@
         </div>
     </div>
 </body>
+<footer class="text-center py-2 bg-light border-top mt-auto">
+    © 2025 Dinh Dau Moi
+</footer>
 
 <script>
     document.getElementById('fileInput').addEventListener('change', function(event) {

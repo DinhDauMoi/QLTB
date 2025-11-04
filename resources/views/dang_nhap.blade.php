@@ -11,7 +11,7 @@
 <body>
     <style>
         /* From Uiverse.io by kennyotsu-monochromia */
-        .container {
+        .containerr {
             width: 100%;
             height: 100%;
             --color: #E1E1E1;
@@ -22,7 +22,7 @@
         }
     </style>
 
-    <body class="container">
+    <body class="containerr d-flex flex-column min-vh-100">
         <div>
             <div class="text-center p-3">
                 <img width="35%" src="/img/logo_lcnb.png" alt="" srcset="">
@@ -44,6 +44,9 @@
         </div>
 
     </body>
+    <footer class="text-center py-2 bg-light border-top mt-auto">
+        © 2025 Dinh Dau Moi
+    </footer>
 </body>
 
 </html>

@@ -173,4 +173,32 @@ class QuanLyController extends Controller
         $exists = ThietBi::where('id', $id)->exists();
         return response()->json(['exists' => $exists]);
     }
+    public function In_QR_Khoang(Request $request)
+    {
+        $startId = $request->start_id;
+        $endId = $request->end_id;
+
+        // Kiểm tra hợp lệ
+        if (!$startId || !$endId || $startId > $endId) {
+            return back()->with('error', 'Khoảng cách chọn in không hợp lệ!');
+        }
+
+        // Lọc thiết bị theo ID trong khoảng
+        $thiet_bi = ThietBi::whereBetween('id', [$startId, $endId])->get();
+
+        if ($thiet_bi->isEmpty()) {
+            return back()->with('error', 'Không có thiết bị nào trong khoảng ID này.');
+        }
+
+        // Xuất PDF
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('pdf_qr_all', [
+            'thiet_bi' => $thiet_bi,
+        ])->setOptions([
+            'isHtml5ParserEnabled' => true,
+            'isRemoteEnabled' => true,
+            'defaultFont' => 'DejaVu Sans',
+        ]);
+
+        return $pdf->download("qr_tu_{$startId}_den_{$endId}.pdf");
+    }
 }

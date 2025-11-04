@@ -33,5 +33,6 @@ Route::get('/tai_all_qr', [QuanLyController::class, 'In_All_QR'])->name('in_all_
 Route::post('/import', [QuanLyController::class, 'import'])->name('import')->middleware('checkLogin');
 Route::get('/export', [QuanLyController::class, 'exportExcel'])->name('export')->middleware('checkLogin');
 Route::get('/kiem_tra_thiet_bi/{id}', [QuanLyController::class, 'kiemTra'])->middleware('checkLogin');
+Route::get('/in_qr_theo_id', [QuanLyController::class, 'In_QR_Khoang'])->name('in_qr_theo_id')->middleware('checkLogin');
 
 //if0_40257662 p4qWTBvopGU5w

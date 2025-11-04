@@ -8,7 +8,7 @@
     <title>Trang chủ</title>
 </head>
 
-<body>
+<body class="d-flex flex-column min-vh-100">
     <style>
         /* From Uiverse.io by kennyotsu-monochromia */
         body {
@@ -30,7 +30,7 @@
                 <h4 class="m-2">CHI TIẾT MÁY IN NHIỆT SỐ {{$chi_tiet->id}}</h4>
             </div>
 
-            <div class="container-responsive d-flex justify-content-start align-items-center gap-2 w-100" style="flex-wrap: wrap !important;">
+            <!-- <div class="container-responsive d-flex justify-content-start align-items-center gap-2 w-100" style="flex-wrap: wrap !important;">
 
                 <div class="d-flex align-items-center justify-content-between gap-2 flex-grow-1" style="min-width: 300px;">
 
@@ -51,7 +51,7 @@
 
                     <a href="{{ route('in_all_qr') }}" class="btn btn-primary w-100 w-sm-auto">In Tất Cả QR</a>
                 </div>
-            </div>
+            </div> -->
         </div>
 
         <!-- ======== MAIN CONTENT ======== -->
@@ -141,7 +141,7 @@
                             <tbody>
                                 @foreach($lich_su as $item)
                                 <tr>
-                                    <td>{{$item->id}}</td>
+                                    <td>{{$loop->iteration}}</td>
                                     <td>{{$item->lskho->ten_kho}}</td>
                                     <td>{{$item->imei}}</td>
                                     <td>{{ \Carbon\Carbon::parse($item->ngay)->format('d-m-Y') }}</td>
@@ -155,5 +155,8 @@
         </div>
     </div>
 </body>
+<footer class="text-center py-2 bg-light border-top mt-auto">
+    © 2025 Dinh Dau Moi
+</footer>
 
 </html>
