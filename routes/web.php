@@ -34,5 +34,7 @@ Route::post('/import', [QuanLyController::class, 'import'])->name('import')->mid
 Route::get('/export', [QuanLyController::class, 'exportExcel'])->name('export')->middleware('checkLogin');
 Route::get('/kiem_tra_thiet_bi/{id}', [QuanLyController::class, 'kiemTra'])->middleware('checkLogin');
 Route::get('/in_qr_theo_id', [QuanLyController::class, 'In_QR_Khoang'])->name('in_qr_theo_id')->middleware('checkLogin');
+Route::get('/noi_dung_mail', [QuanLyController::class, 'noi_dung_mail'])->name('noi_dung_mail')->middleware('checkLogin');
+Route::get('/bao_cao_mail', [QuanLyController::class, 'bao_cao_mail'])->name('bao_cao_mail')->middleware('checkLogin');
 
 //if0_40257662 p4qWTBvopGU5w

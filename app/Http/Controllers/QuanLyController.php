@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Exports\ThietBiExport;
 use App\Imports\ThietBiImport;
+use App\Mail\WeeklyReportMail;
 use App\Models\Kho;
 use App\Models\LichSu;
 use App\Models\ThietBi;
@@ -11,6 +12,7 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Maatwebsite\Excel\Facades\Excel;
 
 class QuanLyController extends Controller
@@ -28,13 +30,14 @@ class QuanLyController extends Controller
         $lich_su = LichSu::where('thiet_bi_id', $id)->orderBy('id', 'desc')->get();
         $chi_tiet = ThietBi::where('id', $id)->first();
         $kho = Kho::all();
-        return view('chi_tiet_thiet_bi', ['chi_tiet' => $chi_tiet, 'kho' => $kho, 'lich_su' => $lich_su,'so_luong'=>$so_luong]);
+        return view('chi_tiet_thiet_bi', ['chi_tiet' => $chi_tiet, 'kho' => $kho, 'lich_su' => $lich_su, 'so_luong' => $so_luong]);
     }
     public function Dang_Nhap()
     {
         return view('dang_nhap');
     }
-    public function Xu_Ly_Dang_Nhap(Request $request){
+    public function Xu_Ly_Dang_Nhap(Request $request)
+    {
         $username = $request->input('ten_dang_nhap');
         $password = $request->input('mat_khau');
 
@@ -47,7 +50,8 @@ class QuanLyController extends Controller
         }
         return back()->with('error', 'Đăng nhập thất bại !!!');
     }
-    public function Dang_xuat(){
+    public function Dang_xuat()
+    {
         session()->forget('user');
         return view('dang_nhap');
     }
@@ -200,5 +204,60 @@ class QuanLyController extends Controller
         ]);
 
         return $pdf->download("qr_tu_{$startId}_den_{$endId}.pdf");
+    }
+    public function noi_dung_mail()
+    {
+        return view('noi_dung_mail');
+    }
+    public function bao_cao_mail()
+    {
+        $tenKho = [
+            1 => 'Kho 1',
+            2 => 'Kho 2',
+            3 => 'Kho 3',
+            4 => 'LCNB',
+            5 => 'Kiểm kê',
+            6 => 'Điều Vận',
+            7 => 'Vaccine',
+            8 => 'Nhập',
+        ];
+
+        // Tổng số máy
+        $tong = ThietBi::count();
+
+        // Tổng còn hạn, tổng sắp hết hạn
+        $con_han_tong = ThietBi::where('ngay', '>', now()->addDays(30))->count();
+
+        $sap_het_han_tong = ThietBi::where('ngay', '<=', now()->addDays(30))->count();
+
+        // Chi tiết từng kho
+        $khoData = [];
+
+        foreach ($tenKho as $id => $name) {
+
+            $query = ThietBi::where('kho_id', $id);
+
+            $khoData[] = [
+                'ten_kho' => $name,
+                'so_luong' => $query->count(),
+                'con_han' => (clone $query)->where('ngay', '>', now()->addDays(30))->count(),
+                'sap_het_han' => (clone $query)->where('ngay', '<=', now()->addDays(30))->count(),
+            ];
+        }
+
+        $report = [
+            'tong' => $tong,
+            'con_han_tong' => $con_han_tong,
+            'sap_het_han_tong' => $sap_het_han_tong,
+            'khoData' => $khoData
+        ];
+
+
+        Mail::to([
+            'dinhdaumoi22@gmail.com',
+            'Phamtruc.1991@gmail.com'
+        ])->send(new WeeklyReportMail($report));
+
+        return redirect('/');
     }
 }
